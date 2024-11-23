@@ -17,7 +17,7 @@ def make_scad(**kwargs):
         #filter = "test"
 
         kwargs["save_type"] = "none"
-        #kwargs["save_type"] = "all"
+        kwargs["save_type"] = "all"
         
         navigation = False
         #navigation = True    
@@ -49,7 +49,10 @@ def make_scad(**kwargs):
         
         part = copy.deepcopy(part_default)
         p3 = copy.deepcopy(kwargs)
-        #p3["thickness"] = 6
+        p3["width"] = 4
+        p3["height"] = 4
+        p3["thickness"] = 3
+        p3["extra"] = "electronic_breakout_board_motor_driver_l9110s_dual_h_bridge_29_mm_width_24_mm_length_blue_pcb_5_08_mm_pitch_screw_terminal_aliexpress"
         part["kwargs"] = p3
         part["name"] = "base"
         parts.append(part)
@@ -85,6 +88,7 @@ def get_base(thing, **kwargs):
     depth = kwargs.get("thickness", 3)                    
     rot = kwargs.get("rot", [0, 0, 0])
     pos = kwargs.get("pos", [0, 0, 0])
+    extra = kwargs.get("extra", "")
     #pos = copy.deepcopy(pos)
     #pos[2] += -20
 
@@ -111,6 +115,9 @@ def get_base(thing, **kwargs):
     p3["pos"] = pos1
     oobb_base.append_full(thing,**p3)
 
+    if extra == "electronic_breakout_board_motor_driver_l9110s_dual_h_bridge_29_mm_width_24_mm_length_blue_pcb_5_08_mm_pitch_screw_terminal_aliexpress":
+        thing = add_electronic_breakout_board_motor_driver_l9110s_dual_h_bridge_29_mm_width_24_mm_length_blue_pcb_5_08_mm_pitch_screw_terminal_aliexpress(thing, **kwargs)
+
     if prepare_print:
         #put into a rotation object
         components_second = copy.deepcopy(thing["components"])
@@ -132,7 +139,62 @@ def get_base(thing, **kwargs):
         p3["shape"] = f"oobb_slice"
         #p3["m"] = "#"
         oobb_base.append_full(thing,**p3)
+
+def add_electronic_breakout_board_motor_driver_l9110s_dual_h_bridge_29_mm_width_24_mm_length_blue_pcb_5_08_mm_pitch_screw_terminal_aliexpress(thing, **kwargs):
+    depth = kwargs.get("thickness", 3)
+    pos = kwargs.get("pos", [0, 0, 0])
+    rot = kwargs.get("rot", [0, 0, 0])
+
+    #add holes
+    p3 = copy.deepcopy(kwargs)
+    p3["type"] = "n"
+    p3["shape"] = f"oobb_screw_countersunk"
+    p3["depth"] = depth
+    p3["radius_name"] = "m3"
+    positions = []
+    positions.append([-8.5, 9])
+    positions.append([-8.5, -9])
+    positions.append([4.5, 9])
+    positions.append([4.5, -9])
+    poss = []
+    for position in positions:
+        pos1 = copy.deepcopy(pos)
+        pos1[0] += position[0]
+        pos1[1] += position[1]
+        poss.append(pos1)
+    p3["pos"] = poss
+    rot1 = copy.deepcopy(rot)
+    rot1[1] = 180
+    p3["rot"] = rot1
     
+    #p3["m"] = "#"
+    oobb_base.append_full(thing,**p3)
+
+    cubes = []
+    size = [3,16,depth]
+    pos1 = copy.deepcopy(pos)
+    pos1[0] += -13.23
+    cubes.append({"size":size, "pos":pos1})
+    
+    size = [4,20,depth]
+    pos1 = copy.deepcopy(pos)
+    pos1[0] += 10.69
+    cubes.append({"size":size, "pos":pos1})
+
+    for cube in cubes:
+        size = cube["size"]
+        pos1 = cube["pos"]
+        p3 = copy.deepcopy(kwargs)
+        p3["type"] = "n"
+        p3["shape"] = f"oobb_cube"
+        p3["size"] = size
+        p3["pos"] = pos1
+        #p3["m"] = "#"
+        oobb_base.append_full(thing,**p3)
+
+
+    return thing
+   
 ###### utilities
 
 
