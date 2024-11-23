@@ -7,12 +7,12 @@ full_shift:
 - 0
 - 0
 kwargs:
-  extra: electronic_breakout_board_motor_driver_l9110s_dual_h_bridge_29_mm_width_24_mm_length_blue_pcb_5_08_mm_pitch_screw_terminal_aliexpress
+  extra: electronic_breakout_board_motor_driver_l298n_dual_h_bridge_25_mm_width_21_mm_length_red_pcb_aliexpress
   height: 4
   modes:
   - 3dpr
   overwrite: true
-  save_type: none
+  save_type: all
   thickness: 3
   type: test_base
   width: 4

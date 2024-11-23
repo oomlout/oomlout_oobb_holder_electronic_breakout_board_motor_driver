@@ -55,6 +55,16 @@ def make_scad(**kwargs):
         p3["extra"] = "electronic_breakout_board_motor_driver_l9110s_dual_h_bridge_29_mm_width_24_mm_length_blue_pcb_5_08_mm_pitch_screw_terminal_aliexpress"
         part["kwargs"] = p3
         part["name"] = "base"
+        #parts.append(part)
+        
+        part = copy.deepcopy(part_default)
+        p3 = copy.deepcopy(kwargs)
+        p3["width"] = 4
+        p3["height"] = 4
+        p3["thickness"] = 3
+        p3["extra"] = "electronic_breakout_board_motor_driver_l298n_dual_h_bridge_25_mm_width_21_mm_length_red_pcb_aliexpress"
+        part["kwargs"] = p3
+        part["name"] = "base"
         parts.append(part)
 
         
@@ -89,6 +99,12 @@ def get_base(thing, **kwargs):
     rot = kwargs.get("rot", [0, 0, 0])
     pos = kwargs.get("pos", [0, 0, 0])
     extra = kwargs.get("extra", "")
+
+    if extra == "electronic_breakout_board_motor_driver_l298n_dual_h_bridge_25_mm_width_21_mm_length_red_pcb_aliexpress":
+        prepare_print = True
+
+
+
     #pos = copy.deepcopy(pos)
     #pos[2] += -20
 
@@ -117,6 +133,8 @@ def get_base(thing, **kwargs):
 
     if extra == "electronic_breakout_board_motor_driver_l9110s_dual_h_bridge_29_mm_width_24_mm_length_blue_pcb_5_08_mm_pitch_screw_terminal_aliexpress":
         thing = add_electronic_breakout_board_motor_driver_l9110s_dual_h_bridge_29_mm_width_24_mm_length_blue_pcb_5_08_mm_pitch_screw_terminal_aliexpress(thing, **kwargs)
+    elif extra == "electronic_breakout_board_motor_driver_l298n_dual_h_bridge_25_mm_width_21_mm_length_red_pcb_aliexpress":
+        thing = add_electronic_breakout_board_motor_driver_l298n_dual_h_bridge_25_mm_width_21_mm_length_red_pcb_aliexpress(thing, **kwargs)
 
     if prepare_print:
         #put into a rotation object
@@ -125,7 +143,8 @@ def get_base(thing, **kwargs):
         return_value_2["type"]  = "rotation"
         return_value_2["typetype"]  = "p"
         pos1 = copy.deepcopy(pos)
-        pos1[0] += 50
+        pos1[0] += 60
+        pos1[2] += depth * 2
         return_value_2["pos"] = pos1
         return_value_2["rot"] = [180,0,0]
         return_value_2["objects"] = components_second
@@ -137,8 +156,125 @@ def get_base(thing, **kwargs):
         p3 = copy.deepcopy(kwargs)
         p3["type"] = "n"
         p3["shape"] = f"oobb_slice"
+        pos1 = copy.deepcopy(pos)
+        pos1[2] += depth
+        p3["pos"] = pos1
         #p3["m"] = "#"
         oobb_base.append_full(thing,**p3)
+
+def add_electronic_breakout_board_motor_driver_l298n_dual_h_bridge_25_mm_width_21_mm_length_red_pcb_aliexpress(thing, **kwargs):
+    depth = kwargs.get("thickness", 3)
+    pos = kwargs.get("pos", [0, 0, 0])
+    rot = kwargs.get("rot", [0, 0, 0])
+
+    thickness_bracket = 4
+
+    #add hole
+    p3 = copy.deepcopy(kwargs)
+    p3["type"] = "n"
+    p3["shape"] = f"oobb_screw_countersunk"
+    p3["depth"] = depth + thickness_bracket
+    p3["radius_name"] = "m3"
+    positions = []
+    positions.append([-10.25, 2.25])
+    hole1 = [7.5, -15]
+    positions.append(hole1)
+    hole2 = [-7.5, -15]
+    positions.append(hole2)
+    poss = []
+    for position in positions:
+        pos1 = copy.deepcopy(pos)
+        pos1[0] += position[0]
+        pos1[1] += position[1]
+        pos1[2] += -0
+        poss.append(pos1)
+    p3["pos"] = poss
+    rot1 = copy.deepcopy(rot)
+    rot1[1] = 180
+    p3["rot"] = rot1
+    
+    p3["m"] = "#"
+    oobb_base.append_full(thing,**p3)
+
+    #add nuts
+    p3 = copy.deepcopy(kwargs)
+    p3["type"] = "n"
+    p3["shape"] = f"oobb_nut"
+    
+    p3["radius_name"] = "m3"
+    positions = []
+    positions.append(hole1)
+    positions.append(hole2)
+    poss = []
+    for position in positions:
+        pos1 = copy.deepcopy(pos)
+        pos1[0] += position[0]
+        pos1[1] += position[1]
+        pos1[2] += depth + thickness_bracket        
+        poss.append(pos1)
+    p3["zz"] = "top"  
+    p3["pos"] = poss
+    p3["m"] = "#"
+    oobb_base.append_full(thing,**p3)
+
+
+    cubes = []
+    dep = 1
+    size = [26,22,dep]
+    pos1 = copy.deepcopy(pos)
+    pos1[2] += depth - dep
+    cubes.append({"size":size, "pos":pos1})
+    
+    size = [3,12,thickness_bracket]
+    pos1 = copy.deepcopy(pos)
+    pos1[0] += 6.985
+    pos1[1] += -5.285
+    pos1[2] += depth
+    cubes.append({"size":size, "pos":pos1})
+
+    pos2 = copy.deepcopy(pos1)
+    pos2[0] += -6.985 * 2
+    cubes.append({"size":size, "pos":pos2})
+
+    size = [5,12,thickness_bracket]
+    pos1 = copy.deepcopy(pos)
+    pos1[0] += 0
+    pos1[1] += -5.25
+    pos1[2] += depth
+    cubes.append({"size":size, "pos":pos1})
+
+
+
+    for cube in cubes:
+        size = cube["size"]
+        pos1 = cube["pos"]
+        p3 = copy.deepcopy(kwargs)
+        p3["type"] = "n"
+        p3["shape"] = f"oobb_cube"
+        p3["size"] = size
+        p3["pos"] = pos1
+        p3["m"] = "#"
+        oobb_base.append_full(thing,**p3)
+
+    #add the on top one
+    #oobb plate 2 x 2
+    p3 = copy.deepcopy(kwargs)
+    p3["type"] = "p"
+    p3["shape"] = f"oobb_plate"
+    p3["width"] = 2.5 - 6/15
+    p3["height"] = 2
+    p3["depth"] = thickness_bracket
+    
+    pos1 = copy.deepcopy(pos)
+    pos1[0] += -15 * 0
+    pos1[1] += -15 * 1
+    pos1[2] += depth
+    p3["pos"] = pos1
+
+    oobb_base.append_full(thing,**p3)
+
+
+    return thing
 
 def add_electronic_breakout_board_motor_driver_l9110s_dual_h_bridge_29_mm_width_24_mm_length_blue_pcb_5_08_mm_pitch_screw_terminal_aliexpress(thing, **kwargs):
     depth = kwargs.get("thickness", 3)
