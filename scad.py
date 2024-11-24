@@ -17,7 +17,7 @@ def make_scad(**kwargs):
         #filter = "test"
 
         kwargs["save_type"] = "none"
-        kwargs["save_type"] = "all"
+        #kwargs["save_type"] = "all"
         
         navigation = False
         #navigation = True    
@@ -55,7 +55,7 @@ def make_scad(**kwargs):
         p3["extra"] = "electronic_breakout_board_motor_driver_l9110s_dual_h_bridge_29_mm_width_24_mm_length_blue_pcb_5_08_mm_pitch_screw_terminal_aliexpress"
         part["kwargs"] = p3
         part["name"] = "base"
-        #parts.append(part)
+        parts.append(part)
         
         part = copy.deepcopy(part_default)
         p3 = copy.deepcopy(kwargs)
@@ -194,7 +194,7 @@ def add_electronic_breakout_board_motor_driver_l298n_dual_h_bridge_25_mm_width_2
     p3["rot"] = rot1
     
     p3["m"] = "#"
-    oobb_base.append_full(thing,**p3)
+    #oobb_base.append_full(thing,**p3)
 
     #add nuts
     p3 = copy.deepcopy(kwargs)
@@ -224,7 +224,8 @@ def add_electronic_breakout_board_motor_driver_l298n_dual_h_bridge_25_mm_width_2
     pos1 = [0,0,depth - dep]
     cubes.append({"size":size, "pos":pos1})
     
-    size = [3,12,thickness_bracket + depth]
+    #input and outpit pin clearance
+    size = [4,12,thickness_bracket + depth]
     pos1 = [6.985,-5.285,0]
     cubes.append({"size":size, "pos":pos1})
 
@@ -236,8 +237,8 @@ def add_electronic_breakout_board_motor_driver_l298n_dual_h_bridge_25_mm_width_2
     pos1 = [0,-5.25,depth]
     cubes.append({"size":size, "pos":pos1})
 
-    
-    size = [3,6,depth]
+    #power input pin clearance
+    size = [4,7,depth]
     pos1 = [-11.23,7.96,0]
     cubes.append({"size":size, "pos":pos1})
 
