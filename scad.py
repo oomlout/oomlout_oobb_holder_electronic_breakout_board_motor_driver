@@ -200,7 +200,7 @@ def add_electronic_breakout_board_motor_driver_l298n_dual_h_bridge_25_mm_width_2
     p3 = copy.deepcopy(kwargs)
     p3["type"] = "n"
     p3["shape"] = f"oobb_nut"
-    
+    p3["overhang"] = True
     p3["radius_name"] = "m3"
     positions = []
     positions.append(hole1)
@@ -221,29 +221,25 @@ def add_electronic_breakout_board_motor_driver_l298n_dual_h_bridge_25_mm_width_2
     cubes = []
     dep = 1
     size = [26,22,dep]
-    pos1 = copy.deepcopy(pos)
-    pos1[2] += depth - dep
+    pos1 = [0,0,depth - dep]
     cubes.append({"size":size, "pos":pos1})
     
-    size = [3,12,thickness_bracket]
-    pos1 = copy.deepcopy(pos)
-    pos1[0] += 6.985
-    pos1[1] += -5.285
-    pos1[2] += depth
+    size = [3,12,thickness_bracket + depth]
+    pos1 = [6.985,-5.285,0]
     cubes.append({"size":size, "pos":pos1})
 
     pos2 = copy.deepcopy(pos1)
     pos2[0] += -6.985 * 2
     cubes.append({"size":size, "pos":pos2})
 
-    size = [5,12,thickness_bracket]
-    pos1 = copy.deepcopy(pos)
-    pos1[0] += 0
-    pos1[1] += -5.25
-    pos1[2] += depth
+    size = [5,12,thickness_bracket + depth]
+    pos1 = [0,-5.25,depth]
     cubes.append({"size":size, "pos":pos1})
 
-
+    
+    size = [3,6,depth]
+    pos1 = [-11.23,7.96,0]
+    cubes.append({"size":size, "pos":pos1})
 
     for cube in cubes:
         size = cube["size"]
@@ -252,6 +248,10 @@ def add_electronic_breakout_board_motor_driver_l298n_dual_h_bridge_25_mm_width_2
         p3["type"] = "n"
         p3["shape"] = f"oobb_cube"
         p3["size"] = size
+        pos2 = copy.deepcopy(pos1)
+        pos2[0] += pos1[0]
+        pos2[1] += pos1[1]
+        pos2[2] += pos1[2]
         p3["pos"] = pos1
         p3["m"] = "#"
         oobb_base.append_full(thing,**p3)
