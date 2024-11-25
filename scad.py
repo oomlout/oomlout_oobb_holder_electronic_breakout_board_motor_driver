@@ -17,7 +17,7 @@ def make_scad(**kwargs):
         #filter = "test"
 
         kwargs["save_type"] = "none"
-        #kwargs["save_type"] = "all"
+        kwargs["save_type"] = "all"
         
         navigation = False
         #navigation = True    
@@ -178,7 +178,7 @@ def add_electronic_breakout_board_motor_driver_l298n_dual_h_bridge_25_mm_width_2
     p3["depth"] = depth + thickness_bracket
     p3["radius_name"] = "m3"
     positions = []
-    positions.append([-10.25, 2.25])
+    #positions.append([-10.25, 2.25])   #screw in the pcb
     hole1 = [7.5, -15]
     positions.append(hole1)
     hole2 = [-7.5, -15]
@@ -196,7 +196,7 @@ def add_electronic_breakout_board_motor_driver_l298n_dual_h_bridge_25_mm_width_2
     p3["rot"] = rot1
     
     p3["m"] = "#"
-    #oobb_base.append_full(thing,**p3)
+    oobb_base.append_full(thing,**p3)
 
     #add nuts
     p3 = copy.deepcopy(kwargs)
