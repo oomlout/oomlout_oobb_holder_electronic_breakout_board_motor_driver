@@ -1,6 +1,4 @@
 project_id: oomlout_oobb_holder_electronic_breakout_board_motor_driver
 project_name: Oomlout Oobb Holder Electronic Breakout Board Motor Driver
 project_repo: https://github.com/oomlout/oomlout_oobb_holder_electronic_breakout_board_motor_driver
-production_format:
-  oolc_1:
-    file_location: source_files/oolc_1.cdr
+
