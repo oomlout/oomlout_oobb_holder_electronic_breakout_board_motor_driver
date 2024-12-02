@@ -17,7 +17,7 @@ def make_scad(**kwargs):
         #filter = "test"
 
         kwargs["save_type"] = "none"
-        kwargs["save_type"] = "all"
+        #kwargs["save_type"] = "all"
         
         navigation = False
         #navigation = True    
@@ -283,6 +283,168 @@ def add_electronic_breakout_board_motor_driver_l9110s_dual_h_bridge_29_mm_width_
     pos = kwargs.get("pos", [0, 0, 0])
     rot = kwargs.get("rot", [0, 0, 0])
 
+    
+    depth_belt = 6
+    extra_lift = 10
+    depth_total = depth + depth_belt  
+    #add oobb belt piece
+    p3 = copy.deepcopy(kwargs)
+    p3["type"] = "p"
+    p3["shape"] = f"oobb_plate"
+    p3["width"] = 2 - 6/15
+    p3["height"] = 4
+    p3["depth"] = depth_belt
+    pos1 = copy.deepcopy(pos)
+    pos1[2] += depth + extra_lift
+    p3["pos"] = pos1
+    #p3["m"] = "#"
+    oobb_base.append_full(thing,**p3)
+
+
+    #add holes
+    p3 = copy.deepcopy(kwargs)
+    p3["type"] = "n"
+    p3["shape"] = f"oobb_hole"
+    p3["depth"] = depth
+    p3["radius_name"] = "m3"
+    positions = []
+    positions.append([-8.5, 9])
+    positions.append([-8.5, -9])
+    positions.append([4.5, 9])
+    positions.append([4.5, -9])
+    positions_hole_pcb = copy.deepcopy(positions)
+    poss = []
+    for position in positions:
+        pos1 = copy.deepcopy(pos)
+        pos1[0] += position[0]
+        pos1[1] += position[1]
+        pos1[2] += depth    
+        poss.append(pos1)
+    p3["pos"] = poss
+    rot1 = copy.deepcopy(rot)
+    rot1[1] = 180
+    p3["rot"] = rot1
+    
+    p3["m"] = "#"
+    oobb_base.append_full(thing,**p3)
+    
+
+    #add screw_countersunk to connect belt
+    p3 = copy.deepcopy(kwargs)
+    p3["type"] = "n"
+    p3["shape"] = f"oobb_screw_countersunk"
+    p3["depth"] = depth_total + extra_lift
+    p3["nut"] = True
+    p3["overhang"] = True
+    p3["radius_name"] = "m3"
+    poss = []
+    positions = []
+    positions.append([0, 22.5])
+    positions.append([0, -22.5])
+    for position in positions:
+        pos1 = copy.deepcopy(pos)
+        pos1[0] += position[0]
+        pos1[1] += position[1]
+        poss.append(pos1)
+    p3["pos"] = poss
+    rot1 = copy.deepcopy(rot)
+    rot1[1] = 180
+    p3["rot"] = rot1
+    p3["m"] = "#"
+    oobb_base.append_full(thing,**p3)
+
+    #add locating spheres
+    p3 = copy.deepcopy(kwargs)
+    p3["type"] = "p"
+    p3["shape"] = f"sphere"    
+    p3["radius"] = 1.4
+    positions = positions_hole_pcb
+    poss = []
+    pos11 = copy.deepcopy(pos)
+    pos11[2] += depth + extra_lift
+    for position in positions:
+        pos1 = copy.deepcopy(pos11)
+        pos1[0] += position[0]
+        pos1[1] += position[1]
+        poss.append(pos1)
+    p3["pos"] = poss
+    
+    #p3["m"] = "#"
+    oobb_base.append_full(thing,**p3)
+
+
+
+    #cubes
+
+    
+
+    
+    cubes = []
+    
+    # cutout for pcb
+    ex = 0.5
+    dep = 1.6
+    size = [29+ex,24+ex,dep]
+    pos1 = copy.deepcopy(pos)
+    pos1[2] += depth - dep
+    cubes.append({"size":size, "pos":pos1})
+
+    #main top through one
+    size = [7,25,depth_belt]
+    pos1 = copy.deepcopy(pos)
+    pos1[0] += -2
+    pos1[1] += 0
+    pos1[2] += depth + extra_lift
+    cubes.append({"size":size, "pos":pos1})
+
+    #main top short one
+    size = [18,12,3]
+    pos1 = copy.deepcopy(pos)
+    pos1[0] += -2.5
+    pos1[1] += 0
+    pos1[2] += depth + extra_lift
+    cubes.append({"size":size, "pos":pos1})
+
+    #screw terminal cutout
+    size = [9,24,depth_belt]
+    pos1 = copy.deepcopy(pos)
+    pos1[0] += 10.5
+    pos1[1] += 0
+    pos1[2] += depth + extra_lift
+    cubes.append({"size":size, "pos":pos1})
+
+    #clearance for solder joints one
+    
+    size = [3,16,depth]
+    pos1 = copy.deepcopy(pos)
+    pos1[0] += -13.23
+    cubes.append({"size":size, "pos":pos1})
+    
+    size = [4,20,depth]
+    pos1 = copy.deepcopy(pos)
+    pos1[0] += 10.69
+    cubes.append({"size":size, "pos":pos1})
+
+    #clearance for solder joints two
+    for cube in cubes:
+        size = cube["size"]
+        pos1 = cube["pos"]
+        p3 = copy.deepcopy(kwargs)
+        p3["type"] = "n"
+        p3["shape"] = f"oobb_cube"
+        p3["size"] = size
+        p3["pos"] = pos1
+        #p3["m"] = "#"
+        oobb_base.append_full(thing,**p3)
+
+
+    return thing
+
+def old_1_add_electronic_breakout_board_motor_driver_l9110s_dual_h_bridge_29_mm_width_24_mm_length_blue_pcb_5_08_mm_pitch_screw_terminal_aliexpress(thing, **kwargs):
+    depth = kwargs.get("thickness", 3)
+    pos = kwargs.get("pos", [0, 0, 0])
+    rot = kwargs.get("rot", [0, 0, 0])
+
     #add holes
     p3 = copy.deepcopy(kwargs)
     p3["type"] = "n"
@@ -332,7 +494,8 @@ def add_electronic_breakout_board_motor_driver_l9110s_dual_h_bridge_29_mm_width_
 
 
     return thing
-   
+
+
 ###### utilities
 
 

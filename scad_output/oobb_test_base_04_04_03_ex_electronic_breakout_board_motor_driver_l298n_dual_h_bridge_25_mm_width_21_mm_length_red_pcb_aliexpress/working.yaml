@@ -13,7 +13,7 @@ kwargs:
   - 3dpr
   - laser
   - 'true'
-  save_type: all
+  save_type: none
   thickness: 3
   type: test_base
   width: 4
