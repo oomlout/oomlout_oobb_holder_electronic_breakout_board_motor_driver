@@ -13,11 +13,11 @@ def make_scad(**kwargs):
 
     # save_type variables
     if True:
-        filter = ""
+        filter = "drv8833"
         #filter = "test"
 
         kwargs["save_type"] = "none"
-        #kwargs["save_type"] = "all"
+        kwargs["save_type"] = "all"
         
         navigation = False
         #navigation = True    
@@ -65,7 +65,16 @@ def make_scad(**kwargs):
         part["kwargs"] = p3
         part["name"] = "base"
         parts.append(part)
-        
+  
+        part = copy.deepcopy(part_default)
+        p3 = copy.deepcopy(kwargs)
+        p3["width"] = 3
+        p3["height"] = 3
+        p3["thickness"] = 3
+        p3["extra"] = "electronic_breakout_board_motor_driver_drv8833_dual_h_bridge_18_mm_width_16_mm_length_black_pcb_aliexpress"
+        part["kwargs"] = p3
+        part["name"] = "base"
+        parts.append(part)      
         
 
         
@@ -73,7 +82,8 @@ def make_scad(**kwargs):
     if True:
         for part in parts:
             name = part.get("name", "default")
-            if filter in name:
+            extra = part.get("kwargs",{}).get("extra","")
+            if filter in name or filter in extra:
                 print(f"making {part['name']}")
                 make_scad_generic(part)            
                 print(f"done {part['name']}")
@@ -136,6 +146,9 @@ def get_base(thing, **kwargs):
         thing = add_electronic_breakout_board_motor_driver_l9110s_dual_h_bridge_29_mm_width_24_mm_length_blue_pcb_5_08_mm_pitch_screw_terminal_aliexpress(thing, **kwargs)
     elif extra == "electronic_breakout_board_motor_driver_l298n_dual_h_bridge_25_mm_width_21_mm_length_red_pcb_aliexpress":
         thing = add_electronic_breakout_board_motor_driver_l298n_dual_h_bridge_25_mm_width_21_mm_length_red_pcb_aliexpress(thing, **kwargs)
+    elif extra == "electronic_breakout_board_motor_driver_drv8833_dual_h_bridge_18_mm_width_16_mm_length_black_pcb_aliexpress":
+        thing = add_electronic_breakout_board_motor_driver_drv8833_dual_h_bridge_18_mm_width_16_mm_length_black_pcb_aliexpress(thing, **kwargs)
+        prepare_print = True
 
     if prepare_print:
         #put into a rotation object
@@ -162,6 +175,125 @@ def get_base(thing, **kwargs):
         p3["pos"] = pos1
         #p3["m"] = "#"
         oobb_base.append_full(thing,**p3)
+
+def add_electronic_breakout_board_motor_driver_drv8833_dual_h_bridge_18_mm_width_16_mm_length_black_pcb_aliexpress(thing, **kwargs):
+    depth = kwargs.get("thickness", 3)
+    pos = kwargs.get("pos", [0, 0, 0])
+    rot = kwargs.get("rot", [0, 0, 0])
+
+    thickness_bracket = 4
+
+    #add hole
+    p3 = copy.deepcopy(kwargs)
+    p3["type"] = "n"
+    p3["shape"] = f"oobb_screw_countersunk"
+    p3["depth"] = depth + thickness_bracket
+    p3["radius_name"] = "m3"
+    positions = []
+    #positions.append([-10.25, 2.25])   #screw in the pcb
+    hole1 = [7.5, -15]
+    positions.append(hole1)
+    hole2 = [-7.5, -15]
+    positions.append(hole2)
+    hole3 = [7.5, 15]
+    positions.append(hole3)
+    hole4 = [-7.5, 15]
+    positions.append(hole4)
+    poss = []
+    for position in positions:
+        pos1 = copy.deepcopy(pos)
+        pos1[0] += position[0]
+        pos1[1] += position[1]
+        pos1[2] += -0
+        poss.append(pos1)
+    p3["pos"] = poss
+    rot1 = copy.deepcopy(rot)
+    rot1[1] = 180
+    p3["rot"] = rot1
+    
+    p3["m"] = "#"
+    p3["nut"] = True
+    p3["overhang"] = True
+    oobb_base.append_full(thing,**p3)
+
+    
+
+    depth_top = thickness_bracket
+    depth_full = depth + depth_top
+
+    cubes = []
+    #header left
+    size = [2.54,6*2.54,depth_full]
+    pos1 = [3*2.54,0,0]
+    cubes.append({"size":size, "pos":pos1})
+
+    #header right
+    size = [2.54,6*2.54,depth_full]
+    pos1 = [-3*2.54,0,0]
+    cubes.append({"size":size, "pos":pos1})
+
+    #pcb indent
+    depth_pcb = 1.2
+    size = [18,16,depth_pcb]
+    pos1 = [0,0,depth- depth_pcb]
+    cubes.append({"size":size, "pos":pos1})
+    
+    #ic cutout
+    size = [6,8,depth_top]
+    pos1 = [1,0,depth]
+    cubes.append({"size":size, "pos":pos1})
+
+    #capacitor
+    size = [6,3,depth_top]
+    pos1 = [2.5,6,depth]
+    cubes.append({"size":size, "pos":pos1})
+
+    # general keepout
+    #pcb indent
+    depth_lift = 2
+    size = [18,14,depth_lift]
+    pos1 = [0,0,depth]
+    cubes.append({"size":size, "pos":pos1})
+    
+
+    for cube in cubes:
+        ex = 1
+        size = cube["size"]
+        pos1 = cube["pos"]
+        p3 = copy.deepcopy(kwargs)
+        p3["type"] = "n"
+        p3["shape"] = f"oobb_cube"
+        size[0] += ex
+        size[1] += ex        
+        p3["size"] = size
+        pos2 = copy.deepcopy(pos1)
+        pos2[0] += pos1[0]
+        pos2[1] += pos1[1]
+        pos2[2] += pos1[2]
+        p3["pos"] = pos1
+        p3["m"] = "#"
+        oobb_base.append_full(thing,**p3)
+
+    #add the on top one
+    #oobb plate 2 x 2
+    p3 = copy.deepcopy(kwargs)
+    p3["type"] = "p"
+    p3["shape"] = f"oobb_plate"
+    p3["width"] = 3
+    p3["height"] = 3
+    p3["depth"] = thickness_bracket
+    
+    pos1 = copy.deepcopy(pos)
+    pos1[0] += -15 * 0
+    pos1[1] += -15 * 0
+    pos1[2] += depth
+    p3["pos"] = pos1
+
+    oobb_base.append_full(thing,**p3)
+
+
+
+    return thing
 
 def add_electronic_breakout_board_motor_driver_l298n_dual_h_bridge_25_mm_width_21_mm_length_red_pcb_aliexpress(thing, **kwargs):
     depth = kwargs.get("thickness", 3)
